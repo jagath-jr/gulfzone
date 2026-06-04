@@ -1,0 +1,64 @@
+<%- include('layout', { body: `
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Manage Home Page</h2>
+        <a href="/admin" class="btn btn-secondary btn-sm">Back to Dashboard</a>
+    </div>
+
+    <div class="card mb-4 border-warning">
+        <div class="card-body d-flex align-items-center justify-content-between bg-light">
+            <div>
+                <h6 class="mb-0 text-warning">History Controls</h6>
+                <small class="text-muted">Revert to the last save or reset to factory defaults.</small>
+            </div>
+            <div class="d-flex gap-2">
+                <form action="/admin/undo" method="POST" onsubmit="return confirm('Revert to the previous version?')">
+                    <input type="hidden" name="file" value="content.json">
+                    <button type="submit" class="btn btn-outline-warning">
+                        <i class="bi bi-arrow-counterclockwise"></i> Undo Last Change
+                    </button>
+                </form>
+                
+                <form action="/admin/restore" method="POST" onsubmit="return confirm('Are you sure? This will wipe all custom changes to the Home section.')">
+                    <input type="hidden" name="file" value="content.json">
+                    <button type="submit" class="btn btn-outline-danger">
+                        <i class="bi bi-arrow-repeat"></i> Restore Defaults
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Hero Section</h5>
+        </div>
+        <div class="card-body">
+            <form action="/admin/home" method="POST">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Main Headline</label>
+                    <input type="text" name="heroTitle" value="${data.heroTitle}" class="form-control" required>
+                    <div class="form-text">This is the large text displayed at the top of the home page.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Hero Subtext / Description</label>
+                    <textarea name="heroDesc" class="form-control" rows="4" required>${data.heroDesc}</textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Button Text</label>
+                        <input type="text" name="heroBtnText" value="${data.heroBtnText}" class="form-control" required>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="reset" class="btn btn-light me-md-2">Discard Changes</button>
+                    <button type="submit" class="btn btn-success px-5">Save Home Page</button>
+                </div>
+            </form>
+        </div>
+    </div>
+` }) %>

@@ -1,0 +1,42 @@
+<%- include('layout', { body: `
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Global Settings</h2>
+        <a href="/admin" class="btn btn-secondary btn-sm">Back to Dashboard</a>
+    </div>
+
+    <div class="d-flex gap-2 mb-3">
+        <form action="/admin/undo" method="POST">
+            <input type="hidden" name="file" value="content.json">
+            <button class="btn btn-warning btn-sm">Undo Last Change</button>
+        </form>
+        <form action="/admin/restore" method="POST" onsubmit="return confirm('Are you sure? This will reset all global settings.');">
+            <input type="hidden" name="file" value="content.json">
+            <button class="btn btn-danger btn-sm">Restore Defaults</button>
+        </form>
+    </div>
+
+    <form method="POST" class="card p-4 shadow-sm">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Mobile Number</label>
+                <input type="text" name="phone" value="${data.phone}" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Landline Number</label>
+                <input type="text" name="landline" value="${data.landline || ''}" class="form-control" placeholder="+971 224 615 99">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Email Address</label>
+            <input type="email" name="email" value="${data.email}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-bold">Physical Address</label>
+            <input type="text" name="address" value="${data.address}" class="form-control" required>
+        </div>
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+        </div>
+    </form>
+` }) %>

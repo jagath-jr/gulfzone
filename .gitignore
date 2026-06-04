@@ -1,0 +1,29 @@
+# --- Dependencies ---
+# Never upload node_modules; they are installed on the server via 'npm install'
+node_modules/
+
+# --- Security ---
+# Contains your passwords, email credentials, and session secrets
+.env
+
+# --- Data & Backups ---
+# Ignore the temporary backups created by the server's Undo function
+data/*.bak
+# Ignore any temporary files if created
+data/*.tmp
+
+# --- Logs ---
+# Standard Node.js logs
+logs
+*.log
+npm-debug.log*
+
+# --- Docker ---
+# Local Docker environment overrides
+docker-compose.override.yml
+.dockerignore
+
+# --- Operating System ---
+# MacOS and Windows system files
+.DS_Store
+Thumbs.db

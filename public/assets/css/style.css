@@ -1,0 +1,430 @@
+/* --- 1. RESET & BASICS --- */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  color: #1a1a1a;
+  box-sizing: border-box;
+  margin: 0;
+  padding-top: 5rem; /* Space for fixed header */
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- 2. HEADER WRAPPER --- */
+#headerWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: transform 0.4s ease-in-out;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.hide-header {
+  transform: translateY(-100%);
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 20px;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo img {
+  width: 12rem;
+  display: block;
+}
+
+.menu-icon {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #000;
+  user-select: none;
+}
+
+/* --- 3. DESKTOP STYLES & ANIMATION --- */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 3rem;
+  margin: 0;
+  padding: 0;
+}
+
+/* Desktop Load Animation */
+@keyframes slideDownFade {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nav-links li, .btn-outline {
+  animation: slideDownFade 0.8s ease forwards;
+  /* Uses the variable we added in HTML for delay */
+  animation-delay: calc(var(--i) * 0.1s); 
+  opacity: 0; /* Hidden before animation starts */
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: #000;
+  font-weight: 500;
+  padding-bottom: 5px;
+  transition: border-bottom 0.2s ease;
+}
+
+.nav-links li a:hover {
+  border-bottom: 2px solid #010101;
+}
+
+/* --- 4. BUTTON STYLES --- */
+.btn-outline {
+  background: linear-gradient(180deg, #ED1C24, #2E3192);
+  color: #fff;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-outline:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* --- 5. MOBILE RESPONSIVE ANIMATION --- */
+@media (max-width: 768px) {
+  .navbar { padding: 1.5rem 15px; }
+  .menu-icon { display: block; }
+
+  /* Mobile Menu Container */
+.nav-right {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  right: 0; /* Stretch to both sides */
+  margin: 0 auto; /* Center horizontally */
+  width: 90%;
+  max-width: 400px; /* Optional: limit maximum width */
+  background: white;
+  flex-direction: column;
+  padding: 30px 0;
+  gap: 20px;
+  box-shadow: 0 10px 10px rgba(0,0,0,0.1);
+  z-index: 900;
+  border-radius: 8px;
+
+  /* Hidden State */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-20px);
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+  /* Active State (Toggled by JS) */
+  .nav-right.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* Reset Desktop Animation */
+  .nav-links li, .btn-outline {
+    animation: none;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.4s ease;
+  }
+
+  /* Mobile Staggered Entrance */
+  .nav-right.active .nav-links li,
+  .nav-right.active .btn-outline {
+    opacity: 1;
+    transform: translateX(0);
+    /* Calculate delay based on index */
+    transition-delay: calc(var(--i) * 0.1s);
+  }
+}
+
+
+/*========Footer section=========*/
+        /* General Footer Styling */
+.site-footer {
+     /* Fallback color */
+    background-image: linear-gradient(180deg, #f79ea2, #9495c7);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #ffffff;
+    padding: 80px 0 0 0;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    
+    z-index: 1; /* This is fine as the container */
+    max-width: 100vw;
+    margin: 0 auto;
+}
+
+/* Faded Background Text - Now on top layer */
+.footer-background-text {
+    position: absolute;
+    top: 70% !important;
+    left: 50%;
+    transform: translate(-50%, -50%) !important;
+    font-size: clamp(6.2rem, 25vw, 25rem);
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.2);
+    z-index: 100; /* Increased to ensure it's on top */
+    pointer-events: none; /* Optional: prevents the text from blocking clicks */
+}
+        /* Content Container */
+        .site-footer .container {
+            max-width: 75rem;
+            margin: 0 auto;
+            padding: 0 1.2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-content {
+             display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12.75rem, 1fr));
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 280px;
+        }
+
+
+        /* Column 1: About & Social */
+        .footer-about .footer-logo {
+            width: 10rem;
+            height: 4rem;
+             background-image: url('../images/common/favicon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+        }
+
+        .footer-about .footer-tagline {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0px 73px 24px 0;
+            text-align: justify;
+        }
+.footer-title {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 12px 73px 24px 15px;
+  text-align: justify;
+  color: #1B7458C7;
+  font-weight: bold; /* This line makes the text bold */
+}
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+
+            border-radius: 50%;
+            color: #ffffff;
+            font-size: 2rem;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Columns 2 & 3: Links & Contact */
+        .footer-column h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .footer-links ul,
+        .footer-contact ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li,
+        .footer-contact li {
+            margin-bottom: 15px;
+        }
+
+        
+        .footer-contact  {
+            color: #ffffff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #383838;
+        }
+
+        .footer-contact li {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .footer-contact  {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 5px;
+            color: #ffffff;
+        }
+        .copyright {
+  color: #666;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+.footer-bottom-unik {
+    background-color: #9495c7;
+    padding: 20px 5% 30px;
+    /* Remove the original border */
+    border-top: none;
+    text-align: center;
+    position: relative;
+}
+
+.footer-bottom-unik::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%; /* Adjust this percentage for desired length */
+    height: 1px;
+    background-color: #eaf0ff;
+}
+.footer-social-icons-unik {
+    margin-bottom: 20px;
+}
+
+.footer-social-icons-unik a {
+    color: #ffffff;
+    font-size: 1.3rem;
+    margin: 0 12px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.footer-social-icons-unik a:hover {
+    transform: scale(1.2) translateY(-2px);
+    color: #cccccc;
+}
+
+.footer-copyright-unik p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+        /* --- Mobile Responsiveness (Updated) --- */
+
+        @media (max-width: 768px) {
+            .footer-background-text {
+                top: 90% !important;
+            }
+
+            .site-footer {
+                padding: 60px 0 0 0;
+               
+            }
+
+            .site-footer .container {
+                padding:15px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 50px;
+                text-align: center;
+            }
+
+            .footer-column {
+                min-width: 100%;
+                text-align: center;
+            }
+
+            /* Centers the logo and its container */
+            .footer-about {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-about .footer-logo {
+                margin-bottom: 15px; /* Adjust spacing below the logo */
+            }
+
+            .footer-about .footer-tagline {
+                font-size: 14px;
+                line-height: 1.5;
+                margin: 0px 4rem 24px 4rem;
+            }
+            .footer-title {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0px 73px 24px 73px;
+            text-align: justify;
+            color: #1B7458C7;
+        }
+
+            .social-icons {
+                justify-content: center;
+                margin-top: 15px;
+            }
+
+            .footer-contact li {
+                flex-direction: column;
+                align-items: center;
+                gap: 5px;
+            }
+        }
