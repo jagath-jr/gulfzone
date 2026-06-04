@@ -287,11 +287,14 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    
+    /* 👇 This is the magic line for the parallax effect 👇 */
+    background-attachment: fixed; 
+    
     padding: 50px 10%;
     box-sizing: border-box;
     overflow: hidden;
 }
-
 .au-container {
     max-width: 1200px;
     width: 100%;
