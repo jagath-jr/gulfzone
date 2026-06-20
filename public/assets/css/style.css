@@ -454,3 +454,75 @@ a {
         gap: 5px;
     }
 }
+
+
+/* WhatsApp Fixed Button Styles */
+#whatsapp {
+  position: fixed;
+  bottom: 100px; /* Adjust this value to position above footer */
+  right: 30px; /* Distance from right edge */
+  z-index: 9999; /* Ensure it stays on top of other elements */
+  animation: whatsapp-pulse 2s infinite; /* Optional pulse animation */
+}
+
+#whatsapp .wtsapp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background-color: #25D366; /* WhatsApp green color */
+  color: #ffffff;
+  border-radius: 50%;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s ease;
+  font-size: 30px;
+}
+
+/* Hover effect */
+#whatsapp .wtsapp:hover {
+  background-color: #20bd5a;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.6);
+}
+
+/* Pulse animation */
+@keyframes whatsapp-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Optional: Stop animation on hover */
+#whatsapp:hover {
+  animation: none;
+}
+
+/* Responsive adjustments for mobile devices */
+@media (max-width: 768px) {
+  #whatsapp {
+    bottom: 80px; /* Adjust for smaller screens */
+    right: 20px;
+  }
+  
+  #whatsapp .wtsapp {
+    width: 50px;
+    height: 50px;
+    font-size: 25px;
+  }
+}
+
+/* Optional: If you want the button to stay exactly above the footer */
+/* Add this if your footer has a specific height */
+@media (min-width: 769px) {
+  #whatsapp {
+    bottom: calc(100px + 50px); /* Adjust based on your footer height */
+  }
+}
