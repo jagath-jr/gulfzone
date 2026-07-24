@@ -445,6 +445,15 @@
     width: 100%;
 }
 
+/* =========================================
+   NEW: Tablet Breakpoint (2 Columns)
+========================================= */
+@media (max-width: 1024px) and (min-width: 768px) {
+    .srv-track {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 .srv-card {
     background: var(--srv-card-bg);
     border-radius: 20px;

@@ -52,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 trigger: "#au-about-section",
                 start: "top 80%",
                 end: "bottom 20%",
-                // CHANGED: "play none none none" ensures it plays once and never reverses/replays
                 toggleActions: "play none none none" 
             }
         });
@@ -129,8 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
         observer.observe(section);
     }
 
-
-
     /* ==========================================================================
        5. QUICK CONNECT ANIMATION
        ========================================================================== */
@@ -184,13 +181,11 @@ document.addEventListener("DOMContentLoaded", () => {
         observer.observe(section);
     }
 
-
     /* ==========================================================================
        6. HOME PAGE SERVICES (Reads "homeServices" from JSON)
        ========================================================================== */
     function initHomeServices() {
         const track = document.querySelector('#services-track');
-        // Stop if we are not on the home page (or wherever the carousel is)
         if (!track) return;
 
         const dotsContainer = document.querySelector('.srv-carousel-dots');
@@ -201,7 +196,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let currentIndex = 0;
         let sliderInterval = null;
         
-        // Touch/swipe variables
         let touchStartX = 0;
         let isDragging = false;
         let startPos = 0;
@@ -209,14 +203,12 @@ document.addEventListener("DOMContentLoaded", () => {
         let prevTranslate = 0;
         let animationID = null;
 
-        // Fetch Data
         fetch('assets/data/services.json')
             .then(res => res.json())
             .then(data => {
                 if (data.homeServices) {
                     servicesData = data.homeServices;
                     renderHomeCards();
-                    // Initial Layout Check
                     updateCarouselLayout();
                     setupCarouselEvents();
                 } else {
@@ -254,37 +246,32 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         function updateCarouselLayout() {
-            // STRICT CHECK: Use matchMedia to align exactly with CSS.
-            // (max-width: 767px) means Tablets (768px+) are NOT mobile.
             const isMobile = window.matchMedia('(max-width: 767px)').matches;
             const cards = document.querySelectorAll('#services-track .srv-card');
             
             if (!isMobile) {
                 /* --- DESKTOP / TABLET (GRID MODE) --- */
                 
-                // 1. Kill the slider interval immediately
                 if (sliderInterval) {
                     clearInterval(sliderInterval);
                     sliderInterval = null;
                 }
 
-                // 2. Reset Track Styles to Grid
-                track.style.display = 'grid';
-                track.style.gridTemplateColumns = 'repeat(auto-fit, minmax(300px, 1fr))';
-                track.style.gap = '20px';
+                // Remove JS layout controls so CSS fully handles it
+                track.style.display = '';
                 track.style.transform = 'none';
                 track.style.transition = 'none';
                 track.style.cursor = 'default';
+                track.style.gridTemplateColumns = '';
+                track.style.gap = '';
                 
-                // 3. CLEANUP: Remove widths added by the slider logic
                 if (cards.length > 0) {
                     cards.forEach(card => {
-                        card.style.minWidth = '';     // Remove fixed width
-                        card.style.marginRight = '';  // Remove margins
+                        card.style.minWidth = '';     
+                        card.style.marginRight = '';  
                     });
                 }
                 
-                // 4. Remove Touch Listeners
                 track.removeEventListener('touchstart', handleTouchStart);
                 track.removeEventListener('touchmove', handleTouchMove);
                 track.removeEventListener('touchend', handleTouchEnd);
@@ -293,13 +280,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 track.removeEventListener('mouseup', handleTouchEnd);
                 track.removeEventListener('mouseleave', handleTouchEnd);
                 
-                // 5. Trigger Desktop Entrance Animation (once)
-                if (hasGSAP && !track.classList.contains('animated-in')) {
+                // IMPORTANT: Added gsap-initialized lock to prevent resize-triggered disappearing cards
+                if (hasGSAP && !track.classList.contains('gsap-initialized') && !track.classList.contains('animated-in')) {
+                    track.classList.add('gsap-initialized'); // Lock it immediately
+                    
                     gsap.from("#services-track .srv-card", {
                         scrollTrigger: {
                             trigger: "#services-track",
                             start: "top 80%",
-                            // CHANGED: "play none none none" ensures it plays once and never reverses
                             toggleActions: "play none none none"
                         },
                         y: 50,
@@ -318,7 +306,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 track.style.transition = 'transform 0.5s ease';
                 track.style.cursor = 'grab';
                 
-                // Re-initialize slider
                 setupMobileCarousel();
             }
         }
@@ -330,23 +317,19 @@ document.addEventListener("DOMContentLoaded", () => {
             const wrapper = document.querySelector('.srv-carousel-wrapper');
             const width = wrapper.offsetWidth;
             
-            // Force cards to take full width of wrapper
             cards.forEach(card => {
                 card.style.minWidth = `${width}px`;
                 card.style.marginRight = '0px'; 
             });
             
-            // Reset position
             track.style.transform = `translateX(-${currentIndex * width}px)`;
             currentTranslate = -currentIndex * width;
             prevTranslate = currentTranslate;
             
-            // Add listeners
             track.addEventListener('touchstart', handleTouchStart, { passive: false });
             track.addEventListener('touchmove', handleTouchMove, { passive: false });
             track.addEventListener('touchend', handleTouchEnd);
             
-            // Mouse events for testing
             track.addEventListener('mousedown', handleTouchStart);
             track.addEventListener('mousemove', handleTouchMove);
             track.addEventListener('mouseup', handleTouchEnd);
@@ -355,7 +338,6 @@ document.addEventListener("DOMContentLoaded", () => {
             startAutoplay();
         }
 
-        // --- Touch/Swipe Handlers ---
         function handleTouchStart(event) {
             if (sliderInterval) {
                 clearInterval(sliderInterval);
@@ -377,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function handleTouchMove(event) {
             if (!isDragging) return;
-            event.preventDefault(); // Stop scroll while swiping
+            event.preventDefault(); 
             
             const currentPosition = getPositionX(event);
             currentTranslate = prevTranslate + currentPosition - startPos;
@@ -394,7 +376,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const width = wrapper.offsetWidth;
             const movedBy = currentTranslate - prevTranslate;
             
-            // Swipe threshold
             if (Math.abs(movedBy) > width * 0.3) {
                 if (movedBy > 0) currentIndex = Math.max(currentIndex - 1, 0);
                 else currentIndex = Math.min(currentIndex + 1, servicesData.length - 1);
@@ -428,7 +409,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (currentIndex < 0) currentIndex = cards.length - 1;
 
             const wrapper = document.querySelector('.srv-carousel-wrapper');
-            // If wrapper is hidden or 0 width, stop
             if (!wrapper || wrapper.offsetWidth === 0) return;
             
             const width = wrapper.offsetWidth;
@@ -469,10 +449,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             }
             
-            // Listen for window resize to switch between Grid/Slider
             window.addEventListener('resize', () => {
                 updateCarouselLayout();
-                // Reset index on resize to prevent awkward offsets
                 currentIndex = 0;
             });
         }
@@ -529,7 +507,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     scrollTrigger: {
                         trigger: card,
                         start: "top 85%",
-                        // CHANGED: "play none none none" ensures it plays once and never reverses
                         toggleActions: "play none none none"
                     },
                     opacity: 1, x: 0, y: 0, duration: 1, ease: "power3.out"
@@ -548,7 +525,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 scrollTrigger: { 
                     trigger: ".section-title-unique", 
                     start: "top 85%",
-                    // CHANGED
                     toggleActions: "play none none none"
                 },
                 opacity: 0, y: -50, duration: 1, ease: "power3.out"
@@ -560,7 +536,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 scrollTrigger: { 
                     trigger: cards[0], 
                     start: "top 85%",
-                    // CHANGED
                     toggleActions: "play none none none"
                 },
                 opacity: 0, y: 50, duration: 0.8, ease: "power2.out", stagger: 0.2
@@ -650,7 +625,6 @@ document.addEventListener("DOMContentLoaded", () => {
             scrollTrigger: { 
                 trigger: "#who-we-are", 
                 start: "top 80%", 
-                // CHANGED
                 toggleActions: "play none none none" 
             },
             y: 30, opacity: 0, duration: 0.8, stagger: 0.2, ease: "power2.out"
@@ -660,7 +634,6 @@ document.addEventListener("DOMContentLoaded", () => {
             scrollTrigger: { 
                 trigger: "#mission-vision", 
                 start: "top 75%",
-                // CHANGED
                 toggleActions: "play none none none"
             }
         });
@@ -671,7 +644,6 @@ document.addEventListener("DOMContentLoaded", () => {
             scrollTrigger: { 
                 trigger: "#what-we-offer", 
                 start: "top 80%",
-                // CHANGED
                 toggleActions: "play none none none"
             },
             y: 40, opacity: 0, duration: 0.6, stagger: 0.15, ease: "back.out(1.7)"
